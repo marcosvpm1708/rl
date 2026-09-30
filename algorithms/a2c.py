@@ -114,8 +114,15 @@ def compute_n_step_returns(
         R_T = next_value.
     """
     # ===================== YOUR CODE HERE (Part 1) =====================
-    raise NotImplementedError("Implement compute_n_step_returns")
+    #raise NotImplementedError("Implement compute_n_step_returns")
     # ===================================================================
+    T, N = rewards.shape
+    returns = torch.zeros_like(rewards)
+    R = next_value
+    for t in reversed(range(T)):
+        R = rewards[t] + gamma * (1.0 - dones[t]) * R
+        returns[t] = R
+    return returns
 
 
 def compute_policy_loss(
@@ -132,8 +139,11 @@ def compute_policy_loss(
     *ascent*.
     """
     # ===================== YOUR CODE HERE (Part 2) =====================
-    raise NotImplementedError("Implement compute_policy_loss")
+    #raise NotImplementedError("Implement compute_policy_loss")
     # ===================================================================
+    advantages = returns - values if use_baseline else returns
+    advantages = advantages.detach()
+    return -(logprobs * advantages).mean()
 
 
 class A2C(Algorithm):
